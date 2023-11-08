@@ -32,7 +32,7 @@ const App = () => {
         <Route
           path="/Nothing"
           element={
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<div>Loading..</div>}>
               <div>Helo</div>
             </Suspense>
           }
