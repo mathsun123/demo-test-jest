@@ -15,4 +15,12 @@ module.exports = {
     "^.+\\.js$": "babel-jest", // Use babel-jest for JavaScript files
   },
   moduleFileExtensions: ["js", "jsx", "json", "node"],
+  "reporters": [
+    "default",
+    ["./node_modules/jest-html-reporter", {
+      "pageTitle": "Test Report",
+      "includeFailureMsg": true,
+      "includeConsoleLog": true,
+    }]
+  ],
 };

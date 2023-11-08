@@ -3,7 +3,7 @@ import { render, fireEvent, screen, cleanup } from "@testing-library/react";
 import renderer from "react-test-renderer";
 import Login from "./Login";
 
-describe("test login component", () => {
+describe("test login username and password validation", () => {
   let usernameInput, passwordInput, submitButton, errorMessage, roleee;
 
   beforeEach(() => {
@@ -46,7 +46,7 @@ describe("test login component", () => {
   });
 });
 
-describe("snapShot test", () => {
+describe("test login component by screenshot", () => {
   test("snapshot should match", () => {
     const rendered = render(<Login />); // Re-render the component after changing input value
     const usernameInput = screen.getByTestId(/usernameId/i);

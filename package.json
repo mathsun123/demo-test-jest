@@ -19,7 +19,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "jest --watchAll --coverage",
+    "test": "jest --watchAll --runInBand --coverage",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -45,6 +45,7 @@
     "@babel/preset-react": "^7.22.15",
     "babel-jest": "^29.7.0",
     "jest": "^27.5.1",
+    "jest-html-reporter": "^3.10.2",
     "jest-watch-typeahead": "^2.2.2",
     "react-test-renderer": "^18.2.0"
   }
