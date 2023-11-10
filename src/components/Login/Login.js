@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import "./Login.css"; // Import the CSS file
 
 const Login = () => {
@@ -9,6 +10,15 @@ const Login = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+
+  const { counterState } = useSelector(
+    (state) => ({
+      counterState: state.counterState,
+    }),
+    shallowEqual
+  );
+  console.log(counterState);
+  const dispatch = useDispatch();
 
   const loginValidation = () => {
     let formIsValid = true;
@@ -45,7 +55,7 @@ const Login = () => {
   };
 
   return (
-    <div className="login-form" style={{ marginTop: '16%' }}>
+    <div className="login-form" style={{ marginTop: "16%" }}>
       <div className="login-form-container">
         <h1>Login</h1>
         <form onSubmit={handleSubmit} className="">

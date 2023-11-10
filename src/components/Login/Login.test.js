@@ -22,12 +22,12 @@ describe("test login username and password validation", () => {
     fireEvent.change(passwordInput, { target: { value: "password" } });
 
     fireEvent.click(submitButton);
-    // expect(roleee).toHaveLength(2)
     expect(
       screen.getByText(
         "Username should be at least 3 characters and password should be at least 6 characters."
       )
     ).toBeInTheDocument();
+
     expect(errorMessage.innerHTML).toEqual(
       "Username should be at least 3 characters and password should be at least 6 characters."
     );
