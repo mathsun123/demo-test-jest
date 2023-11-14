@@ -2,12 +2,18 @@ import React from "react";
 import { render, fireEvent, screen, cleanup } from "@testing-library/react";
 import renderer from "react-test-renderer";
 import Login from "./Login";
+import { store } from "../../store";
+import { Provider } from "react-redux";
 
 describe("test login username and password validation", () => {
   let usernameInput, passwordInput, submitButton, errorMessage, roleee;
 
   beforeEach(() => {
-    const rendered = render(<Login />);
+    const rendered = render(
+      <Provider store={store}>
+        <Login />
+      </Provider>
+    );
 
     usernameInput = screen.getByTestId(/usernameId/i);
     passwordInput = screen.getByTestId(/passwordId/i);
@@ -36,7 +42,7 @@ describe("test login username and password validation", () => {
   test("submitting the form with weak password should display error message", () => {
     fireEvent.change(usernameInput, { target: { value: "username" } });
     fireEvent.change(passwordInput, { target: { value: "password" } });
-    screen.logTestingPlaygroundURL();
+
     fireEvent.click(submitButton);
     expect(errorMessage.innerHTML).toEqual(
       "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character."
@@ -48,7 +54,11 @@ describe("test login username and password validation", () => {
 
 describe("test login component by screenshot", () => {
   test("snapshot should match", () => {
-    const rendered = render(<Login />); // Re-render the component after changing input value
+    const rendered = render(
+      <Provider store={store}>
+        <Login />
+      </Provider>
+    ); // Re-render the component after changing input value
     const usernameInput = screen.getByTestId(/usernameId/i);
 
     const submitButton = screen.getByText("Login", { selector: "button" });
@@ -59,7 +69,11 @@ describe("test login component by screenshot", () => {
   });
 
   test("snapshot should match after changing password input and clicking submit", () => {
-    const { container } = render(<Login />); // Render the component
+    const { container } = render(
+      <Provider store={store}>
+        <Login />
+      </Provider>
+    ); // Render the component
 
     // Find input elements and button
 

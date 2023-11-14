@@ -21,6 +21,8 @@ import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
+import axios from "axios";
+import mock from "./mock.json";
 
 function createData(id, name, calories, fat, carbs, protein) {
   return {
@@ -32,22 +34,6 @@ function createData(id, name, calories, fat, carbs, protein) {
     protein,
   };
 }
-
-const rows = [
-  createData(1, "Cupcake", 305, 3.7, 67, 4.3),
-  createData(2, "Donut", 452, 25.0, 51, 4.9),
-  createData(3, "Eclair", 262, 16.0, 24, 6.0),
-  createData(4, "Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData(5, "Gingerbread", 356, 16.0, 49, 3.9),
-  createData(6, "Honeycomb", 408, 3.2, 87, 6.5),
-  createData(7, "Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData(8, "Jelly Bean", 375, 0.0, 94, 0.0),
-  createData(9, "KitKat", 518, 26.0, 65, 7.0),
-  createData(10, "Lollipop", 392, 0.2, 98, 0.0),
-  createData(11, "Marshmallow", 318, 0, 81, 2.0),
-  createData(12, "Nougat", 360, 19.0, 9, 37.0),
-  createData(13, "Oreo", 437, 18.0, 63, 4.0),
-];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -126,6 +112,22 @@ function EnhancedTableHead(props) {
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
+
+  const rows = [
+    createData(1, "Cupcake", 305, 3.7, 67, 4.3),
+    createData(2, "Donut", 452, 25.0, 51, 4.9),
+    createData(3, "Eclair", 262, 16.0, 24, 6.0),
+    createData(4, "Frozen yoghurt", 159, 6.0, 24, 4.0),
+    createData(5, "Gingerbread", 356, 16.0, 49, 3.9),
+    createData(6, "Honeycomb", 408, 3.2, 87, 6.5),
+    createData(7, "Ice cream sandwich", 237, 9.0, 37, 4.3),
+    createData(8, "Jelly Bean", 375, 0.0, 94, 0.0),
+    createData(9, "KitKat", 518, 26.0, 65, 7.0),
+    createData(10, "Lollipop", 392, 0.2, 98, 0.0),
+    createData(11, "Marshmallow", 318, 0, 81, 2.0),
+    createData(12, "Nougat", 360, 19.0, 9, 37.0),
+    createData(13, "Oreo", 437, 18.0, 63, 4.0),
+  ];
 
   return (
     <TableHead>
@@ -241,13 +243,28 @@ export default function EnhancedTable() {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
+  const [mockRows, setMockRows] = React.useState();
+  const [rows, setRows] = React.useState([]);
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
-
+  // const rows = [
+  //   createData(1, "Cupcake", 305, 3.7, 67, 4.3),
+  //   createData(2, "Donut", 452, 25.0, 51, 4.9),
+  //   createData(3, "Eclair", 262, 16.0, 24, 6.0),
+  //   createData(4, "Frozen yoghurt", 159, 6.0, 24, 4.0),
+  //   createData(5, "Gingerbread", 356, 16.0, 49, 3.9),
+  //   createData(6, "Honeycomb", 408, 3.2, 87, 6.5),
+  //   createData(7, "Ice cream sandwich", 237, 9.0, 37, 4.3),
+  //   createData(8, "Jelly Bean", 375, 0.0, 94, 0.0),
+  //   createData(9, "KitKat", 518, 26.0, 65, 7.0),
+  //   createData(10, "Lollipop", 392, 0.2, 98, 0.0),
+  //   createData(11, "Marshmallow", 318, 0, 81, 2.0),
+  //   createData(12, "Nougat", 360, 19.0, 9, 37.0),
+  //   createData(13, "Oreo", 437, 18.0, 63, 4.0),
+  // ];
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const newSelected = rows.map((n) => n.id);
@@ -256,7 +273,7 @@ export default function EnhancedTable() {
     }
     setSelected([]);
   };
-  console.log(selected);
+
   const handleClick = (event, id) => {
     const selectedIndex = selected.indexOf(id);
     let newSelected = [];
@@ -301,8 +318,36 @@ export default function EnhancedTable() {
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage
       ),
-    [order, orderBy, page, rowsPerPage]
+    [order, orderBy, page, rowsPerPage, rows]
   );
+
+  const handleSubmit = () => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("https://api.example.com/data");
+        setRows(response.data);
+      } catch (error) {
+        // Handle error
+        function transformDataToCreateDataFormat(inputData) {
+          const outputData = [];
+
+          for (const data of inputData) {
+            const [rowNo, foodName, calories, fat, carbs, protein] =
+              Object.values(data);
+            outputData.push(
+              createData(rowNo, foodName, calories, fat, carbs, protein)
+            );
+          }
+
+          return outputData;
+        }
+
+        setRows(transformDataToCreateDataFormat(mock.data));
+        console.error("Failed to fetch data", error);
+      }
+    };
+    fetchData();
+  };
 
   return (
     <Box sx={{ marginTop: "2%", padding: "10%" }}>
@@ -329,6 +374,7 @@ export default function EnhancedTable() {
 
                 return (
                   <TableRow
+                    data-testid={"data_table_rowId"}
                     hover
                     onClick={(event) => handleClick(event, row.id)}
                     role="checkbox"
@@ -391,15 +437,16 @@ export default function EnhancedTable() {
       />
       <div style={{ display: "flex", justifyContent: "end" }}>
         <button
+          onClick={() => handleSubmit()}
           style={{
             fontSize: 15,
-            color: "white",
             fontWeight: "bold",
-            width: 100,
-            height: 30,
-            backgroundColor: "purple",
+            width: 150,
+            padding: 10,
+            backgroundColor: "white",
             border: "none",
             cursor: "pointer",
+            borderRadius: 5,
           }}
         >
           Search

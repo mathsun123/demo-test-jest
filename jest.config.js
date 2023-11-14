@@ -22,8 +22,11 @@ module.exports = {
       {
         pageTitle: "Test Report",
         includeFailureMsg: true,
-        // "includeConsoleLog": true,
+        // includeConsoleLog: true,
       },
     ],
   ],
+  moduleNameMapper: {
+    axios: "axios/dist/node/axios.cjs",
+  },
 };
