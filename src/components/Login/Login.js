@@ -5,6 +5,7 @@ import "./Login.css"; // Import the CSS file
 const Login = () => {
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -17,8 +18,7 @@ const Login = () => {
     }),
     shallowEqual
   );
-  console.log(counterState);
-  const dispatch = useDispatch();
+
 
   const loginValidation = () => {
     let formIsValid = true;

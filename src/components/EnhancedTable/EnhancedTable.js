@@ -22,7 +22,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import axios from "axios";
-import mock from "./mock.json";
 
 function createData(id, name, calories, fat, carbs, protein) {
   return {
@@ -69,34 +68,34 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: "name",
+    id: "id",
     numeric: false,
     disablePadding: true,
-    label: "Dessert (100g serving)",
+    label: "Id",
   },
   {
-    id: "calories",
+    id: "title",
     numeric: true,
     disablePadding: false,
-    label: "Calories",
+    label: "Title",
   },
   {
-    id: "fat",
+    id: "price",
     numeric: true,
     disablePadding: false,
-    label: "Fat (g)",
+    label: "Price",
   },
   {
-    id: "carbs",
+    id: "category",
     numeric: true,
     disablePadding: false,
-    label: "Carbs (g)",
+    label: "Category",
   },
   {
-    id: "protein",
+    id: "description",
     numeric: true,
     disablePadding: false,
-    label: "Protein (g)",
+    label: "Description",
   },
 ];
 
@@ -112,22 +111,6 @@ function EnhancedTableHead(props) {
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
-
-  const rows = [
-    createData(1, "Cupcake", 305, 3.7, 67, 4.3),
-    createData(2, "Donut", 452, 25.0, 51, 4.9),
-    createData(3, "Eclair", 262, 16.0, 24, 6.0),
-    createData(4, "Frozen yoghurt", 159, 6.0, 24, 4.0),
-    createData(5, "Gingerbread", 356, 16.0, 49, 3.9),
-    createData(6, "Honeycomb", 408, 3.2, 87, 6.5),
-    createData(7, "Ice cream sandwich", 237, 9.0, 37, 4.3),
-    createData(8, "Jelly Bean", 375, 0.0, 94, 0.0),
-    createData(9, "KitKat", 518, 26.0, 65, 7.0),
-    createData(10, "Lollipop", 392, 0.2, 98, 0.0),
-    createData(11, "Marshmallow", 318, 0, 81, 2.0),
-    createData(12, "Nougat", 360, 19.0, 9, 37.0),
-    createData(13, "Oreo", 437, 18.0, 63, 4.0),
-  ];
 
   return (
     <TableHead>
@@ -250,21 +233,7 @@ export default function EnhancedTable() {
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
-  // const rows = [
-  //   createData(1, "Cupcake", 305, 3.7, 67, 4.3),
-  //   createData(2, "Donut", 452, 25.0, 51, 4.9),
-  //   createData(3, "Eclair", 262, 16.0, 24, 6.0),
-  //   createData(4, "Frozen yoghurt", 159, 6.0, 24, 4.0),
-  //   createData(5, "Gingerbread", 356, 16.0, 49, 3.9),
-  //   createData(6, "Honeycomb", 408, 3.2, 87, 6.5),
-  //   createData(7, "Ice cream sandwich", 237, 9.0, 37, 4.3),
-  //   createData(8, "Jelly Bean", 375, 0.0, 94, 0.0),
-  //   createData(9, "KitKat", 518, 26.0, 65, 7.0),
-  //   createData(10, "Lollipop", 392, 0.2, 98, 0.0),
-  //   createData(11, "Marshmallow", 318, 0, 81, 2.0),
-  //   createData(12, "Nougat", 360, 19.0, 9, 37.0),
-  //   createData(13, "Oreo", 437, 18.0, 63, 4.0),
-  // ];
+
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const newSelected = rows.map((n) => n.id);
@@ -324,7 +293,8 @@ export default function EnhancedTable() {
   const handleSubmit = () => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("https://api.example.com/data");
+        const response = await axios.get(`https://fakestoreapi.com/products?limit=20`);
+        const response1 = await axios.get(`https://fakestoreapi.com/products?limit=30`);
         setRows(response.data);
       } catch (error) {
         // Handle error
@@ -332,22 +302,23 @@ export default function EnhancedTable() {
           const outputData = [];
 
           for (const data of inputData) {
-            const [rowNo, foodName, calories, fat, carbs, protein] =
+            const [id, title, price, category, rating, image] =
               Object.values(data);
             outputData.push(
-              createData(rowNo, foodName, calories, fat, carbs, protein)
+              createData(id, title, price, category, rating, image)
             );
           }
 
           return outputData;
         }
 
-        setRows(transformDataToCreateDataFormat(mock.data));
+        setRows(transformDataToCreateDataFormat(rows.data));
         console.error("Failed to fetch data", error);
       }
     };
-    fetchData();
+    return fetchData();
   };
+
 
   return (
     <Box sx={{ marginTop: "2%", padding: "10%" }}>
@@ -399,12 +370,12 @@ export default function EnhancedTable() {
                       scope="row"
                       padding="none"
                     >
-                      {row.name}
+                      {row.id}
                     </TableCell>
-                    <TableCell align="right">{row.calories}</TableCell>
-                    <TableCell align="right">{row.fat}</TableCell>
-                    <TableCell align="right">{row.carbs}</TableCell>
-                    <TableCell align="right">{row.protein}</TableCell>
+                    <TableCell align="left">{row.title}</TableCell>
+                    <TableCell align="right">{row.price}</TableCell>
+                    <TableCell align="left">{row.category}</TableCell>
+                    <TableCell align="left">{row.description}</TableCell>
                   </TableRow>
                 );
               })}

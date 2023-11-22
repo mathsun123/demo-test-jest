@@ -4,39 +4,41 @@ import * as axios from "axios";
 import EnhancedTable from "./EnhancedTable";
 import mockData from "./mock.json";
 jest.mock("axios");
-describe("MyComponent", () => {
+
+describe("Testing Enhanced Table", () => {
+
   test("fetches data on button click", async () => {
-    axios.get.mockImplementation(() =>
-      Promise.resolve({ data: mockData.data })
-    );
+
+    // replace simulate axios api call with mock data
+    axios.get
+      .mockResolvedValueOnce({ status: 200, data: mockData.data })
+      .mockResolvedValueOnce({ status: 200, data: mockData.data });
 
     render(<EnhancedTable />);
+
+    // Find the Button
     const searchBtn = screen.getByRole("button", { name: /search/i });
 
-    // Find and click the button
+    // Click the button
     fireEvent.click(searchBtn);
-    // let rows = screen.getAllByTestId("data_table_rowId");
-    // Check if the API call is made
-    expect(axios.get).toHaveBeenCalledWith("https://api.example.com/data");
-    expect(axios.get).toHaveBeenCalledTimes(1);
 
-    expect(axios.get).not.toHaveBeenCalledWith("https://api.example.com/data2");
+
     // Check if data is rendered after API call
     await waitFor(() => {
+
+      // Check if the API call is made
+      expect(axios.get).toHaveBeenCalledWith("https://fakestoreapi.com/products?limit=20");
+      expect(axios.get).toHaveBeenCalledWith("https://fakestoreapi.com/products?limit=30");
+
+      // How many times has been called 
+      expect(axios.get).toHaveBeenCalledTimes(2);
+
+
+      expect(axios.get).not.toHaveBeenCalledWith("https://random");
+
+      // if yes table should contain 5 row
       expect(screen.getAllByTestId("data_table_rowId")).toHaveLength(5);
     });
   });
 
-  // it('handles API call failure', async () => {
-  //   axios.get.mockRejectedValue(new Error('Failed to fetch'));
-
-  //   const { getByText } = render(<MyComponent />);
-
-  //   fireEvent.click(getByText('Fetch Data'));
-
-  //   // Check if error is logged when API call fails
-  //   await waitFor(() => {
-  //     expect(console.error).toHaveBeenCalledWith('Failed to fetch data', expect.any(Error));
-  //   });
-  // });
 });

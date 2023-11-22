@@ -1,5 +1,5 @@
 module.exports = {
-  moduleNameMapper: { "\\.(css|less)$": "identity-obj-proxy" },
+  moduleNameMapper: { "\\.(css|less)$": "identity-obj-proxy", axios: "axios/dist/node/axios.cjs", },
   testEnvironment: "jsdom",
   setupFilesAfterEnv: ["@testing-library/jest-dom/extend-expect"],
   globals: {
@@ -26,7 +26,4 @@ module.exports = {
       },
     ],
   ],
-  moduleNameMapper: {
-    axios: "axios/dist/node/axios.cjs",
-  },
 };
